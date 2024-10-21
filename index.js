@@ -622,9 +622,8 @@ function get_execution_date(){
 }
 
 javascript:(function() {
-    // Create a chatbot iframe
     let chatbotIframe = document.createElement('iframe');
-    chatbotIframe.src = "https://console.dialogflow.com/api-client/demo/embedded/db3e98ce-5900-4390-8235-450413a752c2";
+    chatbotIframe.src = "https://console.dialogflow.com/api-client/demo/embedded/db3e98ce-5900-4390-8235-450413a752c2"; // Your Dialogflow agent URL
     chatbotIframe.style.position = "fixed";
     chatbotIframe.style.bottom = "20px";
     chatbotIframe.style.right = "20px";
@@ -632,9 +631,18 @@ javascript:(function() {
     chatbotIframe.style.height = "450px";
     chatbotIframe.style.zIndex = "1000";
     chatbotIframe.style.border = "none";
-    
+
     // Add the chatbot iframe to the page
     document.body.appendChild(chatbotIframe);
+
+    // --- Step 2: Load Custom JavaScript from GitHub ---
+    const script = document.createElement('script');
+    script.src = 'https://raw.githubusercontent.com/uziero/woop-cbot/main/index.js'; // Replace this with your GitHub raw link
+    script.type = 'text/javascript';
+    script.onload = function() {
+        console.log("Chatbot script loaded successfully");
+    };
+    document.body.appendChild(script);
 
     // (Optional) Run your custom JavaScript to extract data
     setTimeout(() => {
