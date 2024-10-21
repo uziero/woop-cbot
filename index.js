@@ -637,7 +637,7 @@ javascript:(function() {
 
     // --- Step 2: Load Custom JavaScript from GitHub ---
     const script = document.createElement('script');
-    script.src = 'https://raw.githubusercontent.com/uziero/woop-cbot/main/index.js'; // Replace this with your GitHub raw link
+    script.src = 'https://raw.githubusercontent.com/uziero/woop-cbot/refs/heads/main/index.js'; // Replace this with your GitHub raw link
     script.type = 'text/javascript';
     script.onload = function() {
         console.log("Chatbot script loaded successfully");
