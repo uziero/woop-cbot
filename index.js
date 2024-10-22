@@ -622,6 +622,7 @@ function get_execution_date(){
 }
 
 javascript:(function() {
+    // Create a chatbot iframe
     let chatbotIframe = document.createElement('iframe');
     chatbotIframe.src = "https://console.dialogflow.com/api-client/demo/embedded/db3e98ce-5900-4390-8235-450413a752c2"; // Your Dialogflow agent URL
     chatbotIframe.style.position = "fixed";
@@ -635,31 +636,18 @@ javascript:(function() {
     // Add the chatbot iframe to the page
     document.body.appendChild(chatbotIframe);
 
-    // --- Step 2: Load Custom JavaScript from GitHub ---
-    const script = document.createElement('script');
-    script.src = 'https://raw.githubusercontent.com/uziero/woop-cbot/main/index.js';
-    script.type = 'text/javascript';
-    script.onload = function() {
-        console.log("Chatbot script loaded successfully");
-    };
-    document.body.appendChild(script);
+    // --- Your custom JavaScript here ---
 
-    // (Optional) Run your custom JavaScript to extract data
+    // Delay to ensure the page has loaded completely
     setTimeout(() => {
         // Example to get data from the page
         const symbolElement = document.querySelector('.stock-name');
         const symbol = symbolElement ? symbolElement.innerText : 'Unknown';
         
         console.log('Stock symbol:', symbol);
-        // You can use this data to trigger specific messages in the chatbot if needed
-    }, 3000); // Adjust delay as needed for page load
-})();
 
-    // Use a delay to ensure the page has loaded completely, or execute directly if already loaded
-    setTimeout(() => {
         // Use document.evaluate to select the element by XPath
-        const symbol = document.querySelector('.stock-name').innerText
-        const xpath_price = '/html/body/div[1]/div/div[3]/div[1]/div[2]/div[1]/div[1]/div[2]' 
+        const xpath_price = '/html/body/div[1]/div/div[3]/div[1]/div[2]/div[1]/div[1]/div[2]';
         const xpath_legs = "/html/body/div[1]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[11]/div/div/div[1]/div";
         const price_element = document.evaluate(xpath_price, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
         const legDetailsElement = document.evaluate(xpath_legs, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
@@ -680,25 +668,20 @@ javascript:(function() {
 
             // Loop through each line to extract data (between 2 and 6 lines)
             lines.forEach(line => {
-                // Updated regex to match option type, strike, and expiration date more accurately
                 const match = line.match(/(Call|Put)\s+option[s]?\s+at\s+strike\s+([\d.]+)\s+expiry\s+at\s+(\d{2}\/\d{2}\/\d{4})/);
-                
                 if (match) {
                     const optionType = match[1];
                     const strike = match[2];
                     const expiry = match[3];
 
-                    // Add option type and strike to the respective lists
                     optionTypes.push(optionType);
                     strikes.push(parseFloat(strike));
 
-                    // Set the expiration date (taking the first occurrence)
                     if (!expirationDate) {
                         expirationDate = expiry;
                     }
                 }
 
-                // Extract premium if present
                 if (line.startsWith('Expected premium per single strategy:')) {
                     const premiumMatch = line.match(/-?\d+\$/);
                     if (premiumMatch) {
@@ -707,23 +690,26 @@ javascript:(function() {
                 }
             });
 
-            // Log the extracted details
             console.log("Option Types:", optionTypes);
             console.log("Strikes:", strikes);
             console.log("Expiration Date:", expirationDate);
             console.log("Premium:", premium);
-            console.log('price today:', price_today)
-            const strategy_type = determine_strategy(optionTypes, strikes)
-            console.log(strategy_type)
-            console.log(symbol)
-            const strategy = create_strategy(symbol, strategy_type, strikes, expirationDate, premium)
-            console.log(strategy)
-            console.log('profit potential: ', WhatIsMyPotentialProfit(strategy, price_today))
-            console.log('max risk: ', WhatIsMyMaximumRisk(strategy, price_today))
-            console.log('invlove: ', WhatDoesThisStrategyInvlove(strategy, price_today))
-            console.log('work: ', HowDoesThisStrategyWork(strategy, price_today))
+            console.log('price today:', price_today);
+
+            // Assuming determine_strategy and create_strategy are available in the script
+            const strategy_type = determine_strategy(optionTypes, strikes);
+            console.log(strategy_type);
+            console.log(symbol);
+            const strategy = create_strategy(symbol, strategy_type, strikes, expirationDate, premium);
+            console.log(strategy);
+            console.log('profit potential: ', WhatIsMyPotentialProfit(strategy, price_today));
+            console.log('max risk: ', WhatIsMyMaximumRisk(strategy, price_today));
+            console.log('involve: ', WhatDoesThisStrategyInvlove(strategy, price_today));
+            console.log('work: ', HowDoesThisStrategyWork(strategy, price_today));
         }
-    }, 3000); // Adjust the delay as needed to wait for the content to load   
+    }, 5000); // Adjust the delay as needed for page load
 
+    // --- Supporting Functions Here ---
+    // Add determine_strategy, create_strategy, WhatIsMyPotentialProfit, etc. here
 
-    
+})();
